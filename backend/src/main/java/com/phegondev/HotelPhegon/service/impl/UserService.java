@@ -3,8 +3,11 @@ package com.phegondev.HotelPhegon.service.impl;
 import com.phegondev.HotelPhegon.dto.LoginRequest;
 import com.phegondev.HotelPhegon.dto.Response;
 import com.phegondev.HotelPhegon.dto.UserDTO;
+import com.phegondev.HotelPhegon.entity.LoginLog;
+import com.phegondev.HotelPhegon.entity.LoginStatus;
 import com.phegondev.HotelPhegon.entity.User;
 import com.phegondev.HotelPhegon.exception.OurException;
+import com.phegondev.HotelPhegon.repo.LoginLogRepository;
 import com.phegondev.HotelPhegon.repo.UserRepository;
 import com.phegondev.HotelPhegon.service.interfac.IUserService;
 import com.phegondev.HotelPhegon.utils.JWTUtils;
@@ -15,6 +18,8 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -32,6 +37,8 @@ public class UserService implements IUserService {
     @Autowired
     private AuthenticationManager authenticationManager;
 
+    @Autowired
+    private LoginLogRepository loginLogRepository;
 
     @Override
     public Response register(User user) {
@@ -79,6 +86,17 @@ public class UserService implements IUserService {
             response.setRole(user.getRole());
             response.setMessage("successful");
             response.setStatusCode(200);
+
+            // Use the builder to create a new log entry
+            LoginLog logEntry = LoginLog.builder()
+                    .username(loginRequest.getEmail())
+                    .status(LoginStatus.SUCCESS)
+                    .timestamp(LocalDateTime.now())
+                    .ipAddress("LocalHost")
+                    .build();
+
+            // Save the log entry to the database
+            loginLogRepository.save(logEntry);
 
         } catch (OurException e) {
             response.setStatusCode(404);

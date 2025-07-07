@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <title>Histórico de Login</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            color: #333;
+        }
+        h1 {
+            text-align: center;
+            color: #4a4a4a;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+        thead {
+            background-color: #f2f2f2;
+        }
+        .footer {
+            text-align: center;
+            font-size: 0.8em;
+            color: #777;
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+        }
+    </style>
+</head>
+<body>
+<h1>Histórico de Login do Usuário: <span th:text="${username}"></span></h1>
+
+<table>
+    <thead>
+    <tr>
+        <th>Data e Hora</th>
+        <th>Status</th>
+        <th>Endereço IP</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="log : ${logs}">
+        <td th:text="${#temporals.format(log.timestamp, 'dd/MM/yyyy HH:mm:ss')}"></td>
+        <td th:text="${log.status}"></td>
+        <td th:text="${log.ipAddress}"></td>
+    </tr>
+    </tbody>
+</table>
+
+<div class="footer">
+    Relatório gerado em <span th:text="${#temporals.format(#dates.createNow(), 'dd/MM/yyyy HH:mm')}"></span>
+</div>
+</body>
+</html>

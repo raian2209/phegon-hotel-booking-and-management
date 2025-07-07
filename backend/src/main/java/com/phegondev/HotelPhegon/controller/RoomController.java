@@ -38,7 +38,7 @@ public class RoomController {
             response.setStatusCode(400);
             response.setMessage("Please Provide values for all fields(photo, roomType, roomPrice)");
         }
-        Response response = roomService.addNewRoom(photo, roomType, roomPrice, roomDescription);
+        Response response = roomService.addNewRoom( roomType, roomPrice, roomDescription);
         return ResponseEntity.status(response.getStatusCode()).body(response);
     }
 
@@ -90,7 +90,7 @@ public class RoomController {
             @RequestParam(value = "roomType", required = false) String roomType,
             @RequestParam(value = "roomPrice", required = false) BigDecimal roomPrice,
             @RequestParam(value = "roomDescription", required = false) String roomDescription) {
-        Response response = roomService.updateRoom(roomId, roomDescription, roomType, roomPrice, photo);
+        Response response = roomService.updateRoom(roomId, roomDescription, roomType, roomPrice);
         return ResponseEntity.status(response.getStatusCode()).body(response);
 
     }

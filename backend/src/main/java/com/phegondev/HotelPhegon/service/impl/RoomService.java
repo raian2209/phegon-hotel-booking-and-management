@@ -6,13 +6,11 @@ import com.phegondev.HotelPhegon.entity.Room;
 import com.phegondev.HotelPhegon.exception.OurException;
 import com.phegondev.HotelPhegon.repo.BookingRepository;
 import com.phegondev.HotelPhegon.repo.RoomRepository;
-import com.phegondev.HotelPhegon.service.AwsS3Service;
 import com.phegondev.HotelPhegon.service.interfac.IRoomService;
 import com.phegondev.HotelPhegon.utils.Utils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -25,20 +23,19 @@ public class RoomService implements IRoomService {
     private RoomRepository roomRepository;
     @Autowired
     private BookingRepository bookingRepository;
-    @Autowired
-    private AwsS3Service awsS3Service;
+
 
 
     @Override
-    public Response addNewRoom(MultipartFile photo, String roomType, BigDecimal roomPrice, String description) {
+    public Response addNewRoom( String roomType, BigDecimal roomPrice, String description) {
         Response response = new Response();
 
         try {
 
-            String imageUrl = awsS3Service.saveImageToS3(photo);
+
             Room room = new Room();
 
-            room.setRoomPhotoUrl(imageUrl);
+
             room.setRoomType(roomType);
             room.setRoomPrice(roomPrice);
             room.setRoomDescription(description);
@@ -108,21 +105,16 @@ public class RoomService implements IRoomService {
     }
 
     @Override
-    public Response updateRoom(Long roomId, String description, String roomType, BigDecimal roomPrice, MultipartFile photo) {
+    public Response updateRoom(Long roomId, String description, String roomType, BigDecimal roomPrice) {
         Response response = new Response();
 
         try {
-            String imageUrl = null;
 
-            if (photo != null && !photo.isEmpty()){
-                imageUrl = awsS3Service.saveImageToS3(photo);
-            }
 
             Room room = roomRepository.findById(roomId).orElseThrow(()-> new OurException("Room Not Found"));
             if(roomType != null) room.setRoomType(roomType);
             if (roomPrice != null) room.setRoomPrice(roomPrice);
             if (description != null) room.setRoomDescription(description);
-            if (imageUrl != null) room.setRoomPhotoUrl(imageUrl);
 
             Room updatedRoom = roomRepository.save(room);
             RoomDTO roomDTO = Utils.mapRoomEntityToRoomDTO(updatedRoom);

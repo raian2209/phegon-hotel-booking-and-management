@@ -1,7 +1,7 @@
 package com.phegondev.HotelPhegon.entity;
 
 import jakarta.persistence.*;
-import lombok.Data;
+import lombok.*;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -10,6 +10,10 @@ import java.util.List;
 @Data
 @Entity
 @Table(name = "rooms")
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
 public class Room {
 
 
