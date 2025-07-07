@@ -102,9 +102,31 @@ public class UserService implements IUserService {
             response.setStatusCode(404);
             response.setMessage(e.getMessage());
 
+            // Use the builder to create a new log entry
+            LoginLog logEntry = LoginLog.builder()
+                    .username(loginRequest.getEmail())
+                    .status(LoginStatus.FAILURE)
+                    .timestamp(LocalDateTime.now())
+                    .ipAddress("LocalHost")
+                    .build();
+
+            // Save the log entry to the database
+            loginLogRepository.save(logEntry);
+
         } catch (Exception e) {
             response.setStatusCode(500);
             response.setMessage("Error Logging in " + e.getMessage());
+
+            // Use the builder to create a new log entry
+            LoginLog logEntry = LoginLog.builder()
+                    .username(loginRequest.getEmail())
+                    .status(LoginStatus.FAILURE)
+                    .timestamp(LocalDateTime.now())
+                    .ipAddress("LocalHost")
+                    .build();
+
+            // Save the log entry to the database
+            loginLogRepository.save(logEntry);
 
         }
         return response;
