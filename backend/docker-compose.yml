@@ -1,0 +1,48 @@
+# Versão do Docker Compose
+version: '3.8'
+
+services:
+  # Serviço do banco de dados PostgreSQL
+  db:
+    image: postgres:15 # Usar uma imagem específica do Postgres é uma boa prática
+    container_name: phegon-postgres-db
+    restart: always # Sempre reiniciar o container se ele parar
+    environment:
+      # As credenciais que você forneceu
+      POSTGRES_USER: dennismac
+      POSTGRES_PASSWORD: "12345678" # É uma boa prática usar aspas
+      POSTGRES_DB: phegon_hotel_db
+    ports:
+      # Mapeia a porta do seu computador (host) para a porta do container
+      # Sua aplicação Spring irá se conectar em localhost:5432
+      - "5432:5432"
+    volumes:
+      # Garante que os dados do banco não sejam perdidos ao reiniciar/remover o container
+      - postgres-data:/var/lib/postgresql/data
+    networks:
+      - hotel-network
+
+  # Serviço do PGAdmin para gerenciar o banco
+  pgadmin:
+    image: dpage/pgadmin4:latest # Imagem oficial do PGAdmin 4
+    container_name: phegon-pgadmin
+    restart: always
+    environment:
+      # Credenciais para LOGAR NO PGADMIN (não no banco de dados)
+      PGADMIN_DEFAULT_EMAIL: "admin@example.com"
+      PGADMIN_DEFAULT_PASSWORD: "admin"
+    ports:
+      # Mapeia a porta do seu computador para a porta do container do PGAdmin
+      # Você irá acessar a interface web em http://localhost:5050
+      - "5050:80"
+    depends_on:
+      - db # O PGAdmin só vai iniciar depois que o serviço 'db' estiver pronto
+    networks:
+      - hotel-network
+
+# Define os volumes e redes que serão usados pelos serviços
+volumes:
+  postgres-data: # Volume nomeado para persistir os dados
+
+networks:
+  hotel-network: # Rede customizada para os containers se comunicarem
