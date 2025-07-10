@@ -5,6 +5,7 @@ import ApiService from '../../service/ApiService';
 const ProfilePage = () => {
     const [user, setUser] = useState(null);
     const [error, setError] = useState(null);
+    const [isGeneratingReport, setIsGeneratingReport] = useState(false);
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -32,6 +33,50 @@ const ProfilePage = () => {
         navigate('/edit-profile');
     };
 
+
+    // Nova função para gerar e baixar o relatório em PDF
+    const handleGenerateReport = async () => {
+        // Verifica se os dados do usuário estão disponíveis
+        if (!user || !user.name) {
+            setError("User data not available to generate report.");
+            return;
+        }
+
+        setIsGeneratingReport(true); // Ativa o estado de loading
+        setError(null);
+
+        try {
+            // Chama o método do serviço que busca o PDF
+            // Assumindo que seu ApiService foi atualizado
+            const response = await ApiService.generateLoginReport(user.name);
+
+            // Cria uma URL temporária para o arquivo (blob) recebido
+            const url = window.URL.createObjectURL(new Blob([response.data]));
+            
+            // Cria um elemento de link <a> temporário
+            const link = document.createElement('a');
+            link.href = url;
+            
+            // Define o nome do arquivo que será baixado
+            const filename = `historico-login-${user.name}.pdf`;
+            link.setAttribute('download', filename);
+            
+            // Adiciona o link ao documento e o clica para iniciar o download
+            document.body.appendChild(link);
+            link.click();
+            
+            // Limpa o link e a URL da memória após o download
+            link.parentNode.removeChild(link);
+            window.URL.revokeObjectURL(url);
+
+        } catch (err) {
+            setError("Failed to generate report. Please try again later.");
+            console.error(err);
+        } finally {
+            setIsGeneratingReport(false); // Desativa o estado de loading
+        }
+    };
+
     return (
         <div className="profile-page">
             {user && <h2>Welcome, {user.name}</h2>}
@@ -45,6 +90,14 @@ const ProfilePage = () => {
                     <h3>My Profile Details</h3>
                     <p><strong>Email:</strong> {user.email}</p>
                     <p><strong>Phone Number:</strong> {user.phoneNumber}</p>
+                {/* Botão para gerar o relatório */}
+                    <button 
+                        className="generate-report-button" 
+                        onClick={handleGenerateReport} 
+                        disabled={isGeneratingReport}
+                    >
+                        {isGeneratingReport ? 'Generating Report...' : 'Generate Access Report'}
+                    </button>
                 </div>
             )}
             <div className="bookings-section">

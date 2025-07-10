@@ -168,6 +168,21 @@ export default class ApiService {
         return result.data
     }
 
+  // +++ NOVO MÉTODO PARA GERAR O RELATÓRIO +++
+    static async generateLoginReport(username) {
+        const token = localStorage.getItem("token");
+        const response = await axios.get(`${this.BASE_URL}/logs/pdf/${username}`, {
+            headers: {
+                Authorization: `Bearer ${token}`
+                // Note que não definimos 'Content-Type': 'application/json' aqui
+            },
+            responseType: 'blob', // Essencial para o axios tratar a resposta como um arquivo
+        });
+        // Retornamos a resposta completa para que o componente possa acessar os dados (o blob)
+        return response;
+    }
+
+
 
     /**AUTHENTICATION CHECKER */
     static logout() {
