@@ -104,7 +104,7 @@ public class RoomController {
     }
 
     @GetMapping("/never-booked")
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @PreAuthorize("hasAuthority('ADMIN')")
     public ResponseEntity<List<Room>> getNeverBookedRooms() {
         List<Room> rooms = roomService.getRoomsThatHaveNeverBeenBooked();
         return ResponseEntity.ok(rooms);

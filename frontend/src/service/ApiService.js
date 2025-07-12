@@ -182,6 +182,18 @@ export default class ApiService {
         return response;
     }
 
+    static async generateBookingReport() {
+        // Usamos o token diretamente para não enviar o "Content-Type" json
+        const token = localStorage.getItem("token");
+        const response = await axios.get(`${this.BASE_URL}/bookings/report/pdf`, {
+            headers: {
+                Authorization: `Bearer ${token}`
+            },
+            responseType: 'blob' // Essencial para o axios tratar a resposta como um arquivo
+        });
+        return response;
+    }
+
 
 
     /**AUTHENTICATION CHECKER */

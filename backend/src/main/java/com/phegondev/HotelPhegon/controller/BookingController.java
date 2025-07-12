@@ -5,11 +5,13 @@ import com.phegondev.HotelPhegon.dto.BookingDetailsDTO;
 import com.phegondev.HotelPhegon.dto.Response;
 import com.phegondev.HotelPhegon.entity.Booking;
 import com.phegondev.HotelPhegon.service.interfac.IBookingService;
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.IOException;
 import java.util.List;
 
 @RestController
@@ -51,10 +53,16 @@ public class BookingController {
     }
 
     @GetMapping("/details/all")
-    @PreAuthorize("hasRole('ROLE_ADMIN')") // Apenas administradores podem acessar
+    @PreAuthorize("hasAuthority('ADMIN')") // Apenas administradores podem acessar
     public ResponseEntity<List<BookingDetailsDTO>> getAllBookingDetails() {
         List<BookingDetailsDTO> bookingDetails = bookingService.getAllBookingDetails();
         return ResponseEntity.ok(bookingDetails);
+    }
+
+    @GetMapping("/report/pdf")
+    @PreAuthorize("hasAuthority('ADMIN')") // Protegendo o endpoint
+    public void generatePdfReport(HttpServletResponse response) throws IOException {
+        bookingService.generateBookingsReport(response);
     }
 
 }

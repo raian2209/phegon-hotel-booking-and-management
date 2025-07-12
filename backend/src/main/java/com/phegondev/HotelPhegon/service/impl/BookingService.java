@@ -14,11 +14,14 @@ import com.phegondev.HotelPhegon.repo.RoomRepository;
 import com.phegondev.HotelPhegon.repo.UserRepository;
 import com.phegondev.HotelPhegon.service.interfac.IBookingService;
 import com.phegondev.HotelPhegon.service.interfac.IRoomService;
+import com.phegondev.HotelPhegon.utils.BookingPdfExporter;
 import com.phegondev.HotelPhegon.utils.Utils;
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import java.io.IOException;
 import java.util.List;
 
 @Service
@@ -160,5 +163,16 @@ public class BookingService implements IBookingService {
     public List<BookingDetailsDTO> getAllBookingDetails() {
         return bookingRepository.findAllBookingDetails();
     }
+
+    @Override
+    public void generateBookingsReport(HttpServletResponse response) throws IOException {
+        // Busca todos os bookings do banco. Você pode adicionar filtros se quiser.
+        List<Booking> bookings = bookingRepository.findAll();
+
+        // Cria a instância do exportador e chama o método de exportação
+        BookingPdfExporter exporter = new BookingPdfExporter(bookings);
+        exporter.export(response);
+    }
+
 
 }
