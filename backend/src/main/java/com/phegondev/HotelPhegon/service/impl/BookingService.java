@@ -2,6 +2,7 @@ package com.phegondev.HotelPhegon.service.impl;
 
 
 import com.phegondev.HotelPhegon.dto.BookingDTO;
+import com.phegondev.HotelPhegon.dto.BookingDetailsDTO;
 import com.phegondev.HotelPhegon.dto.Response;
 import com.phegondev.HotelPhegon.dto.RoomDTO;
 import com.phegondev.HotelPhegon.entity.Booking;
@@ -154,4 +155,10 @@ public class BookingService implements IBookingService {
                 );
 
     }
+
+    @Override
+    public List<BookingDetailsDTO> getAllBookingDetails() {
+        return bookingRepository.findAllBookingDetails();
+    }
+
 }

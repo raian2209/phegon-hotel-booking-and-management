@@ -1,6 +1,7 @@
 package com.phegondev.HotelPhegon.controller;
 
 
+import com.phegondev.HotelPhegon.dto.BookingDetailsDTO;
 import com.phegondev.HotelPhegon.dto.Response;
 import com.phegondev.HotelPhegon.entity.Booking;
 import com.phegondev.HotelPhegon.service.interfac.IBookingService;
@@ -8,6 +9,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/bookings")
@@ -47,5 +50,11 @@ public class BookingController {
         return ResponseEntity.status(response.getStatusCode()).body(response);
     }
 
+    @GetMapping("/details/all")
+    @PreAuthorize("hasRole('ROLE_ADMIN')") // Apenas administradores podem acessar
+    public ResponseEntity<List<BookingDetailsDTO>> getAllBookingDetails() {
+        List<BookingDetailsDTO> bookingDetails = bookingService.getAllBookingDetails();
+        return ResponseEntity.ok(bookingDetails);
+    }
 
 }

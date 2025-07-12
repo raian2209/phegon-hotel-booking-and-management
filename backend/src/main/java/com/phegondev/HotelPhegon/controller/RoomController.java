@@ -2,6 +2,7 @@ package com.phegondev.HotelPhegon.controller;
 
 
 import com.phegondev.HotelPhegon.dto.Response;
+import com.phegondev.HotelPhegon.entity.Room;
 import com.phegondev.HotelPhegon.service.interfac.IBookingService;
 import com.phegondev.HotelPhegon.service.interfac.IRoomService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -102,5 +103,11 @@ public class RoomController {
         return ResponseEntity.status(response.getStatusCode()).body(response);
     }
 
+    @GetMapping("/never-booked")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    public ResponseEntity<List<Room>> getNeverBookedRooms() {
+        List<Room> rooms = roomService.getRoomsThatHaveNeverBeenBooked();
+        return ResponseEntity.ok(rooms);
+    }
 
 }

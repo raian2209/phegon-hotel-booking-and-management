@@ -1,6 +1,7 @@
 package com.phegondev.HotelPhegon.service.interfac;
 
 import com.phegondev.HotelPhegon.dto.Response;
+import com.phegondev.HotelPhegon.entity.Room;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.math.BigDecimal;
@@ -17,4 +18,5 @@ public interface IRoomService {
     Response getRoomById(Long roomId);
     Response getAvailableRoomsByDateAndType(LocalDate checkInDate, LocalDate checkOutDate, String roomType);
     Response getAllAvailableRooms();
+    List<Room> getRoomsThatHaveNeverBeenBooked();
 }

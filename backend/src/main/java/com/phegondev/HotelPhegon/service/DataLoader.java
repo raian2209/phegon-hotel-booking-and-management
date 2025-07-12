@@ -27,9 +27,9 @@ public class DataLoader implements CommandLineRunner {
 
             User admin = new User();
             admin.setName("Admin User");
-            admin.setEmail("admin@hotelphegon.com");
+            admin.setEmail("admin@example.com");
             // Hasheando a senha antes de salvar!
-            admin.setPassword(passwordEncoder.encode("minhaSenhaForte123"));
+            admin.setPassword(passwordEncoder.encode("123"));
             admin.setRole("ADMIN");
             admin.setPhoneNumber("000000000");
 

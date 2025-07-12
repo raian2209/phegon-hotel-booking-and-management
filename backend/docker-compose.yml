@@ -19,6 +19,11 @@ services:
     volumes:
       # Garante que os dados do banco não sejam perdidos ao reiniciar/remover o container
       - postgres-data:/var/lib/postgresql/data
+
+      # --- LINHA ADICIONADA AQUI ---
+      # Mapeia a pasta local com scripts para a pasta de inicialização do Postgres.
+      # Os scripts serão executados na primeira vez que o container for criado.
+      - ./db-init-scripts:/docker-entrypoint-initdb.d
     networks:
       - hotel-network
 

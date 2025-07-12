@@ -197,4 +197,10 @@ public class RoomService implements IRoomService {
         }
         return response;
     }
+
+    @Override
+    public List<Room> getRoomsThatHaveNeverBeenBooked() {
+        return roomRepository.findAvailableRoomsThatHaveNeverBeenBooked();
+    }
+
 }
